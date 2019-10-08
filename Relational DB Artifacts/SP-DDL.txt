@@ -11,14 +11,6 @@ create table host (
 	username varchar(20),
 	pword varchar(150),
 	email varchar(50),
-	address varchar(60),
-	unit varchar(10),
-	city varchar(20),
-	state varchar(2),
-	zip numeric(5,0),
-	first_name varchar(50),
-	last_name varchar(50),
-	birthday varchar(10),
 	accepted_materials varchar(1000),
 	is_listing_on tinyint(1),
 	account_permissions_id numeric(1,0),
@@ -46,14 +38,20 @@ create table contributor (
 ) Engine=InnoDB;
 
 create table homeowner (
+	first_name varchar(50),
+	last_name varchar(50),
+	birthday varchar(10),
 	user_id int,
+	address varchar(60),
+	city varchar(20),
+	state varchar(2),
+	zip numeric(5,0),
 	meeting_place_address varchar(60),
 	meeting_place_city varchar(20),
 	meeting_place_state varchar(2),
 	meeting_place_zip numeric(5,0),
-	meeting_place_zip_ext numeric(4,0),
-	display_radius numeric(6,3),
-	approx_radius numeric (6,3),
+	display_radius numeric(2,0),
+	approx_radius numeric (2,0),
 	primary key (user_id),
 	foreign key (user_id) references host (id) on delete cascade
 ) Engine=InnoDB;
@@ -97,6 +95,7 @@ create table business_match (
 create table homeowner_rating (
 	contributor_user_id int,
 	homeowner_user_id int,
+	rating int,
 	primary key (contributor_user_id, homeowner_user_id),
 	foreign key (contributor_user_id) references contributor (user_id) on delete cascade,
 	foreign key (homeowner_user_id) references homeowner (user_id) on delete cascade
