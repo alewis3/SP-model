@@ -1,37 +1,48 @@
 
 create table account_permissions (
-	id numeric(1,0),
+	id int auto_increment not null,
 	account_type varchar(20),
 	primary key (id),
-	check (account_type in ('Contributor', 'Homeowner', 'Business Owner', 'System Admin'))
+	check (account_type in ('Contributor', 'Host', 'System Admin'))
 ) Engine=InnoDB;
 
-create table user (
+create table host (
 	id int auto_increment not null,
-	name varchar(20),
-	password varchar(150),
+	username varchar(20),
+	pword varchar(150),
 	email varchar(50),
 	address varchar(60),
 	unit varchar(10),
 	city varchar(20),
 	state varchar(2),
 	zip numeric(5,0),
-	zip_ext numeric(4,0),
 	first_name varchar(50),
 	last_name varchar(50),
-	birth_date numeric(2,0),
-	birth_month numeric(2,0),
-	birth_year numeric(4,0),
-	account_permissions_id numeric(1,0)
-	primary key (id, account_permissions_id),
+	birthday varchar(10),
+	accepted_materials varchar(1000),
+	is_listing_on tinyint(1),
+	account_permissions_id numeric(1,0),
+	primary key (id),
 	foreign key (account_permissions_id) references account_permissions (id) on delete cascade
 ) Engine=InnoDB;
 
 create table contributor (
-	user_id int,
+	id int auto_increment not null,
+	username varchar(20),
+	pword varchar(150),
+	email varchar(50),
+	address varchar(60),
+	unit varchar(10),
+	city varchar(20),
+	state varchar(2),
+	zip numeric(5,0),
+	first_name varchar(50),
+	last_name varchar(50),
+	birthday varchar(10),
 	search_radius numeric(6,3),
-	primary key (user_id),
-	foreign key (user_id) references user (id) on delete cascade
+	account_permissions_id numeric(1,0),
+	primary key (id),
+	foreign key (account_permissions_id) references account_permissions (id) on delete cascade
 ) Engine=InnoDB;
 
 create table homeowner (
@@ -41,29 +52,30 @@ create table homeowner (
 	meeting_place_state varchar(2),
 	meeting_place_zip numeric(5,0),
 	meeting_place_zip_ext numeric(4,0),
-	accepted_materials varchar(1000),
 	display_radius numeric(6,3),
 	approx_radius numeric (6,3),
-	is_listing_on tinyint(1),
 	primary key (user_id),
-	foreign key (user_id) references user (id) on delete cascade
+	foreign key (user_id) references host (id) on delete cascade
 ) Engine=InnoDB;
 
 create table business_owner (
 	user_id int,
-	accepted_materials varchar(1000),
 	business_phone numeric(10,0),
 	business_hours varchar(500),
 	business_website varchar(100),
-	is_listing_on tinyint(1),
 	primary key (user_id),
-	foreign key (user_id) references user (id) on delete cascade
+	foreign key (user_id) references host (id) on delete cascade
 ) Engine=InnoDB;
 
 create table system_admin (
-	user_id int,
-	primary key (user_id),
-	foreign key (user_id) references user (id) on delete cascade
+	id int auto_increment not null,
+	username varchar(20),
+	pword varchar(150),
+	email varchar(50),
+	first_name varchar(50),
+	last_name varchar(50),
+	primary key (id),
+	foreign key (id) references base_user (id) on delete cascade
 ) Engine=InnoDB;
 
 create table homeowner_match (
@@ -117,7 +129,7 @@ create table business_owner_match_request (
 create table blocked_user (
 	blocking_user_id int,
 	blocked_user_id int,
-	primary key (blocking_user_id, blocked_user_id)
-	foreign key (blocking_user_id) references user (id) on delete cascade,
-	foreign key (blocked_user_id) references user (id) on delete cascade
+	primary key (blocking_user_id, blocked_user_id),
+	foreign key (blocking_user_id) references base_user (id) on delete cascade,
+	foreign key (blocked_user_id) references base_user (id) on delete cascade
 ) Engine=InnoDB;
