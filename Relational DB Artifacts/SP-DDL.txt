@@ -1,0 +1,134 @@
+
+create table account_permissions (
+	id int auto_increment not null,
+	account_type varchar(20),
+	primary key (id),
+	check (account_type in ('Contributor', 'Host', 'System Admin'))
+) Engine=InnoDB;
+
+create table host (
+	id int auto_increment not null,
+	username varchar(20),
+	pword varchar(150),
+	email varchar(50),
+	accepted_materials varchar(1000),
+	is_listing_on tinyint(1),
+	account_permissions_id numeric(1,0),
+	primary key (id),
+	foreign key (account_permissions_id) references account_permissions (id) on delete cascade
+) Engine=InnoDB;
+
+create table contributor (
+	id int auto_increment not null,
+	username varchar(20),
+	pword varchar(150),
+	email varchar(50),
+	address varchar(60),
+	unit varchar(10),
+	city varchar(20),
+	state varchar(2),
+	zip numeric(5,0),
+	first_name varchar(50),
+	last_name varchar(50),
+	birthday varchar(10),
+	search_radius numeric(6,3),
+	account_permissions_id numeric(1,0),
+	primary key (id),
+	foreign key (account_permissions_id) references account_permissions (id) on delete cascade
+) Engine=InnoDB;
+
+create table homeowner (
+	first_name varchar(50),
+	last_name varchar(50),
+	birthday varchar(10),
+	user_id int,
+	address varchar(60),
+	city varchar(20),
+	state varchar(2),
+	zip numeric(5,0),
+	meeting_place_address varchar(60),
+	meeting_place_city varchar(20),
+	meeting_place_state varchar(2),
+	meeting_place_zip numeric(5,0),
+	display_radius numeric(2,0),
+	approx_radius numeric (2,0),
+	primary key (user_id),
+	foreign key (user_id) references host (id) on delete cascade
+) Engine=InnoDB;
+
+create table business_owner (
+	user_id int,
+	business_phone numeric(10,0),
+	business_hours varchar(500),
+	business_website varchar(100),
+	primary key (user_id),
+	foreign key (user_id) references host (id) on delete cascade
+) Engine=InnoDB;
+
+create table system_admin (
+	id int auto_increment not null,
+	username varchar(20),
+	pword varchar(150),
+	email varchar(50),
+	first_name varchar(50),
+	last_name varchar(50),
+	primary key (id),
+	foreign key (id) references base_user (id) on delete cascade
+) Engine=InnoDB;
+
+create table homeowner_match (
+	contributor_user_id int,
+	homeowner_user_id int,
+	primary key (contributor_user_id, host_user_id),
+	foreign key (contributor_user_id) references contributor (user_id) on delete cascade,
+	foreign key (homeowner_user_id) references homeowner (user_id) on delete cascade
+) Engine=InnoDB;
+
+create table business_match (
+	contributor_user_id int,
+	business_owner_user_id int,
+	primary key (contributor_user_id, host_user_id),
+	foreign key (contributor_user_id) references contributor (user_id) on delete cascade,
+	foreign key (business_owner_user_id) references business_owner (user_id) on delete cascade
+) Engine=InnoDB;
+
+create table homeowner_rating (
+	contributor_user_id int,
+	homeowner_user_id int,
+	rating int,
+	primary key (contributor_user_id, homeowner_user_id),
+	foreign key (contributor_user_id) references contributor (user_id) on delete cascade,
+	foreign key (homeowner_user_id) references homeowner (user_id) on delete cascade
+) Engine=InnoDB;
+
+create table business_owner_rating (
+	contributor_user_id int,
+	business_owner_user_id int,
+	primary key (contributor_user_id, business_owner_user_id),
+	foreign key (contributor_user_id) references contributor (user_id) on delete cascade,
+	foreign key (business_owner_user_id) references business_owner (user_id) on delete cascade
+) Engine=InnoDB;
+
+create table homeowner_match_request (
+	contributor_user_id int,
+	homeowner_user_id int,
+	primary key (contributor_user_id, homeowner_user_id),
+	foreign key (contributor_user_id) references contributor (user_id) on delete cascade,
+	foreign key (homeowner_user_id) references homeowner (user_id) on delete cascade
+) Engine=InnoDB;
+
+create table business_owner_match_request (
+	contributor_user_id int,
+	business_owner_user_id int,
+	primary key (contributor_user_id, business_owner_user_id),
+	foreign key (contributor_user_id) references contributor (user_id) on delete cascade,
+	foreign key (business_owner_user_id) references business_owner (user_id) on delete cascade
+) Engine=InnoDB;
+
+create table blocked_user (
+	blocking_user_id int,
+	blocked_user_id int,
+	primary key (blocking_user_id, blocked_user_id),
+	foreign key (blocking_user_id) references base_user (id) on delete cascade,
+	foreign key (blocked_user_id) references base_user (id) on delete cascade
+) Engine=InnoDB;

@@ -1,0 +1,4 @@
+
+insert into account_permissions (null, 'System Admin');
+insert into account_permissions (null, 'Contributor');
+insert into account_permissions (null, 'Host');
