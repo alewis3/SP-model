@@ -1,91 +1,75 @@
-{
-    "hosts" : [{
-        "id" : int,
-        "username": string,
-        "password": hash,
-        "email": string,
-        "accepted_materials": string,
-        "is_listing_on": boolean/tinyint,
-        "account_type": string ("Homeowner", "Business Owner"),
-        "blocked_users": [{
-            "blocked_user_id": int,
-            "username": string
+ {
+    users : [{
+        id : Number,
+        username: String,
+        password: String,
+        email: String,
+        name: {
+            first: String,
+            last: String
+        },
+        accountType: String ("Contributor", "Homeowner", "Business Owner", "System Admin"),
+        birthday: Date,
+        blockedUsers: [{
+            blockedUserId: Number
         }],
-        "homeowners": {
-            "name": {
-                "first": string,
-                "last": string
-            },
-            "birthday": string,
-            "home_address": {
-                "street_address": string,
-                "city": string,
-                "state": string,       
-                "zip": int
-            },
-            "meeting_place": {   
-                "street_address": string|null,
-                "city": string|null,
-                "state": string|null,
-                "zip": int|null
-            }
-            "display_radius": int|null,
-            "approx_radius": int|null
-        },
-        "business_owners": {
-            "business_name": string|null,
-            "business_phone": int|null,
-            "business_website": string|null
-            "business_hours": {
-                "weekday_hours": string|null,
-                "weekend_hours": string|null
-            }
-        }
-
-    }], 
-    "contributors": [{
-        "id" : int,
-        "username": string,
-        "password": hash,
-        "email": string,
-        "name": {
-            "first": string,
-            "last": string
-        },
-        "birthday": string,
-        "home_address": {
-            "street_address": string,
-            "city": string,
-            "state": string,       
-            "zip": int
-        },
-        "search_radius": int,
-        "blocked_users": [{
-            "blocked_user_id": int,
-            "username": string
+        blockedBy: [{
+            blockingUserId: Number
         }]
-    }],
-    "system_admins": [{
-        "id": int,
-        "username": string,
-        "password": hash,
-        "email": string,
-        "name": {
-            "first": string,
-            "last": string
+        homeownerInfo: {
+            name: {
+                first: String,
+                last: String
+            },
+            homeAddress: {
+                streetAddress: String,
+                city: String,
+                state: String,       
+                zip: Number
+            },
+            meetingPlace: {   
+                streetAddress: String,
+                city: String,
+                state: String,
+                zip: Number
+            },
+            acceptedMaterials: String,
+            isListingOn: Boolean,
+            display_radius: Number,
+            approx_radius: Number
+        },
+        businessOwnerInfo: {
+            acceptedMaterials: String,
+            isListingOn: Boolean,
+            businessName: String,
+            businessPhone:Number,
+            businessWebsite: String,
+            businessHours: {
+                weekdayHours: String,
+                weekendHours: String
+            }
+        },
+        contributorInfo: {
+            homeAddress: {
+                streetAddress: String,
+                city: String,
+                state: String,       
+                zip: Number
+            },
+            searchRadius: Number,
         }
+    }], 
+    match_request: [{
+        contributor_id: Number,
+        host_id: Number
     }],
-    "match_request": [{
-        "contributor_id": int,
-        "host_id": int
+    match: [{
+        contributor_id: Number,
+        host_id: Number
     }],
-    "match": [{
-        "contributor_id": int,
-        "host_id": int
-    }],
-    "rating": [{
-        "contributor_id": int,
-        "host_id": int,
-        "rating": int
+    rating: [{
+        contributor_id: Number,
+        host_id: Number,
+        rating: Number
     }]
 }
